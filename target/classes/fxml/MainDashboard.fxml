@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="700.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.klinik.controller.MainDashboardController">
+   <left>
+      <VBox prefHeight="700.0" prefWidth="230.0" styleClass="sidebar" BorderPane.alignment="CENTER">
+         <children>
+            <!-- Judul Klinik -->
+            <Label styleClass="sidebar-title" text="KLINIK SEHAT USTB" />
+            
+            <!-- Panel Informasi Pengguna -->
+            <VBox alignment="CENTER_LEFT" spacing="4.0" styleClass="user-profile-panel">
+               <children>
+                  <Label fx:id="userNameLabel" text="Nama Pengguna" styleClass="user-profile-name" />
+                  <Label fx:id="userRoleLabel" text="ROLE PENGGUNA" styleClass="user-profile-role" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="15.0" left="15.0" right="15.0" />
+               </VBox.margin>
+            </VBox>
+            
+            <!-- Menu Utama -->
+            <Button fx:id="btnOverview" mnemonicParsing="false" onAction="#showOverview" styleClass="sidebar-item" text="🏠   Ringkasan" />
+            <Button fx:id="btnPasien" mnemonicParsing="false" onAction="#showPasien" styleClass="sidebar-item" text="👥   Data Pasien" />
+            <Button fx:id="btnDokter" mnemonicParsing="false" onAction="#showDokter" styleClass="sidebar-item" text="👨‍⚕️   Dokter &amp; Jadwal" />
+            <Button fx:id="btnPendaftaran" mnemonicParsing="false" onAction="#showPendaftaran" styleClass="sidebar-item" text="📋   Pendaftaran Antrian" />
+            <Button fx:id="btnRekamMedis" mnemonicParsing="false" onAction="#showRekamMedis" styleClass="sidebar-item" text="🩺   Rekam Medis" />
+            <Button fx:id="btnObat" mnemonicParsing="false" onAction="#showObat" styleClass="sidebar-item" text="💊   Apotek &amp; Obat" />
+            <Button fx:id="btnLaporan" mnemonicParsing="false" onAction="#showLaporan" styleClass="sidebar-item" text="📊   Laporan Kunjungan" />
+            
+            <!-- Spacer Vertikal agar Logout berada di paling bawah -->
+            <VBox VBox.vgrow="ALWAYS" />
+            
+            <Separator prefWidth="200.0" style="-fx-opacity: 0.1;" />
+            <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#handleLogout" styleClass="sidebar-item-logout" text="🚪   Keluar" />
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <!-- Header Atas -->
+            <HBox alignment="CENTER_LEFT" prefHeight="65.0" styleClass="dashboard-header">
+               <children>
+                  <Label fx:id="viewTitleLabel" styleClass="dashboard-header-title" text="Ringkasan" />
+                  <HBox HBox.hgrow="ALWAYS" />
+                  <Label fx:id="dateLabel" styleClass="dashboard-header-date" text="Hari ini, Tanggal" />
+               </children>
+            </HBox>
+            
+            <!-- Konten Dinamis Sub-Layar -->
+            <StackPane fx:id="contentArea" VBox.vgrow="ALWAYS" style="-fx-background-color: -fx-bg-light; -fx-padding: 20;">
+               <!-- FXML sub-view dimuat secara dinamis di sini -->
+            </StackPane>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

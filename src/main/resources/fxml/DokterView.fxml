@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<TabPane prefHeight="600.0" prefWidth="900.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.klinik.controller.DokterController">
+  <tabs>
+    <!-- Tab 1: Profil Dokter -->
+    <Tab text="👥   Profil Dokter">
+      <content>
+        <HBox spacing="20.0" style="-fx-padding: 15; -fx-background-color: -fx-bg-light;">
+           <children>
+              <!-- Tabel Dokter -->
+              <VBox spacing="15.0" styleClass="card" HBox.hgrow="ALWAYS">
+                 <children>
+                    <TableView fx:id="dokterTableView" prefHeight="400.0" VBox.vgrow="ALWAYS">
+                       <columns>
+                          <TableColumn fx:id="colDokterNama" prefWidth="220.0" text="Nama Dokter" />
+                          <TableColumn fx:id="colDokterSpesialisasi" prefWidth="160.0" text="Spesialisasi" />
+                          <TableColumn fx:id="colDokterSip" prefWidth="140.0" style="-fx-alignment: CENTER;" text="No. SIP" />
+                       </columns>
+                    </TableView>
+                 </children>
+              </VBox>
+              
+              <!-- Form Profil Dokter -->
+              <VBox prefWidth="380.0" spacing="15.0" styleClass="card">
+                 <children>
+                    <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: -fx-text-dark;" text="Form Profil Dokter" />
+                    
+                    <GridPane hgap="10.0" vgap="10.0" VBox.vgrow="ALWAYS">
+                       <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="100.0" />
+                          <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="250.0" />
+                       </columnConstraints>
+                       <rowConstraints>
+                          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" prefHeight="100.0" valignment="TOP" vgrow="SOMETIMES" />
+                       </rowConstraints>
+                       <children>
+                          <Label text="Akun Dokter *" GridPane.rowIndex="0" />
+                          <ComboBox fx:id="dokterUserComboBox" maxWidth="1.7976931348623157E308" promptText="Hubungkan ke akun" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                          
+                          <Label text="Spesialisasi *" GridPane.rowIndex="1" />
+                          <ComboBox fx:id="dokterSpesialisasiComboBox" maxWidth="1.7976931348623157E308" promptText="Pilih spesialisasi" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                          
+                          <Label text="No. SIP *" GridPane.rowIndex="2" />
+                          <TextField fx:id="dokterSipField" promptText="No. Surat Izin Praktik" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                          
+                          <Label text="No. Telepon" GridPane.rowIndex="3" />
+                          <TextField fx:id="dokterTeleponField" promptText="Telepon aktif dokter" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                          
+                          <Label text="Bio Singkat" GridPane.rowIndex="4">
+                             <GridPane.margin>
+                                <Insets top="5.0" />
+                             </GridPane.margin></Label>
+                          <TextArea fx:id="dokterBioArea" prefHeight="100.0" promptText="Tulis deskripsi / biografi singkat dokter..." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                       </children>
+                    </GridPane>
+                    
+                    <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                       <children>
+                          <Button mnemonicParsing="false" onAction="#handleNewDokter" styleClass="btn-secondary" text="Bersihkan Form" />
+                          <Button mnemonicParsing="false" onAction="#handleDeleteDokter" styleClass="btn-danger" text="Hapus" />
+                          <Button mnemonicParsing="false" onAction="#handleSaveDokter" styleClass="btn-primary" text="Simpan" />
+                       </children>
+                       <VBox.margin>
+                          <Insets top="10.0" />
+                       </VBox.margin>
+                    </HBox>
+                 </children>
+              </VBox>
+           </children>
+        </HBox>
+      </content>
+    </Tab>
+    
+    <!-- Tab 2: Jadwal Praktik -->
+    <Tab text="📅   Jadwal Praktik">
+      <content>
+        <HBox spacing="20.0" style="-fx-padding: 15; -fx-background-color: -fx-bg-light;">
+           <children>
+              <!-- Tabel Jadwal -->
+              <VBox spacing="15.0" styleClass="card" HBox.hgrow="ALWAYS">
+                 <children>
+                    <TableView fx:id="jadwalTableView" prefHeight="400.0" VBox.vgrow="ALWAYS">
+                       <columns>
+                          <TableColumn fx:id="colJadwalDokter" prefWidth="200.0" text="Nama Dokter" />
+                          <TableColumn fx:id="colJadwalHari" prefWidth="100.0" style="-fx-alignment: CENTER;" text="Hari" />
+                          <TableColumn fx:id="colJadwalJam" prefWidth="140.0" style="-fx-alignment: CENTER;" text="Jam Praktik" />
+                          <TableColumn fx:id="colJadwalKuota" prefWidth="80.0" style="-fx-alignment: CENTER;" text="Kuota" />
+                       </columns>
+                    </TableView>
+                 </children>
+              </VBox>
+              
+              <!-- Form Jadwal Praktik -->
+              <VBox prefWidth="380.0" spacing="15.0" styleClass="card">
+                 <children>
+                    <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: -fx-text-dark;" text="Form Jadwal Praktik" />
+                    
+                    <GridPane hgap="10.0" vgap="12.0" VBox.vgrow="ALWAYS">
+                       <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="100.0" />
+                          <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="250.0" />
+                       </columnConstraints>
+                       <rowConstraints>
+                          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                       </rowConstraints>
+                       <children>
+                          <Label text="Pilih Dokter *" GridPane.rowIndex="0" />
+                          <ComboBox fx:id="jadwalDokterComboBox" maxWidth="1.7976931348623157E308" promptText="Pilih dokter pemeriksa" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                          
+                          <Label text="Hari Layanan *" GridPane.rowIndex="1" />
+                          <ComboBox fx:id="jadwalHariComboBox" maxWidth="1.7976931348623157E308" promptText="Pilih hari layanan" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                          
+                          <Label text="Jam Mulai *" GridPane.rowIndex="2" />
+                          <TextField fx:id="jadwalJamMulaiField" promptText="HH:mm (contoh: 08:00)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                          
+                          <Label text="Jam Selesai *" GridPane.rowIndex="3" />
+                          <TextField fx:id="jadwalJamSelesaiField" promptText="HH:mm (contoh: 12:00)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                          
+                          <Label text="Kuota Pasien *" GridPane.rowIndex="4" />
+                          <TextField fx:id="jadwalKuotaField" promptText="Maksimal antrian" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                          
+                          <Label text="Tersedia" GridPane.rowIndex="5" />
+                          <CheckBox fx:id="jadwalTersediaCheckBox" mnemonicParsing="false" selected="true" text="Jadwal Aktif &amp; Tersedia" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                       </children>
+                    </GridPane>
+                    
+                    <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                       <children>
+                          <Button mnemonicParsing="false" onAction="#handleNewJadwal" styleClass="btn-secondary" text="Bersihkan Form" />
+                          <Button mnemonicParsing="false" onAction="#handleDeleteJadwal" styleClass="btn-danger" text="Hapus" />
+                          <Button mnemonicParsing="false" onAction="#handleSaveJadwal" styleClass="btn-primary" text="Simpan" />
+                       </children>
+                       <VBox.margin>
+                          <Insets top="10.0" />
+                       </VBox.margin>
+                    </HBox>
+                 </children>
+              </VBox>
+           </children>
+        </HBox>
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>

@@ -1,0 +1,299 @@
+/* ============================================================
+   style.css — Stylesheet Global (Mazer Dashboard Theme Redesign)
+   ============================================================ */
+
+/* Theme Variables (Mazer Palette) */
+* {
+    -fx-primary:        #435ebe; /* Mazer Primary Indigo */
+    -fx-primary-dark:   #3950a2;
+    -fx-primary-light:  #ebf3ff;
+    -fx-danger:         #ff7976; /* Mazer Danger */
+    -fx-success:        #5ddab4; /* Mazer Success */
+    -fx-warning:        #eaca4a; /* Mazer Warning */
+    -fx-text-dark:      #25396f; /* Mazer Dark Blue-Gray */
+    -fx-text-muted:     #7c8db5; /* Mazer Muted Text */
+    -fx-border-color:   #eef2f6;
+    -fx-bg-light:       #f2f7ff; /* Mazer Light BG */
+}
+
+/* Root background & typography */
+.root {
+    -fx-background-color: -fx-bg-light;
+    -fx-font-family: "Poppins", "Segoe UI", "Arial", sans-serif;
+    -fx-font-size: 13px;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* ---- Buttons (Mazer Style) ---- */
+.btn-primary {
+    -fx-background-color: #435ebe;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20 8 20;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(67, 94, 190, 0.15), 10, 0, 0, 4);
+}
+.btn-primary:hover {
+    -fx-background-color: #3950a2;
+    -fx-effect: dropshadow(three-pass-box, rgba(67, 94, 190, 0.25), 12, 0, 0, 6);
+}
+.btn-primary:pressed {
+    -fx-background-color: #2e3f80;
+}
+
+.btn-danger {
+    -fx-background-color: #ff7976;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20 8 20;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 121, 118, 0.15), 10, 0, 0, 4);
+}
+.btn-danger:hover {
+    -fx-background-color: #e06360;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 121, 118, 0.25), 12, 0, 0, 6);
+}
+
+.btn-secondary {
+    -fx-background-color: transparent;
+    -fx-text-fill: #435ebe;
+    -fx-border-color: #435ebe;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 7 18 7 18;
+    -fx-cursor: hand;
+}
+.btn-secondary:hover {
+    -fx-background-color: #ebf3ff;
+    -fx-text-fill: #3950a2;
+    -fx-border-color: #3950a2;
+}
+
+/* ---- Input Controls (Mazer Style) ---- */
+.text-field, .password-field, .text-area, .combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #dfe5ef;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12 8 12;
+    -fx-font-size: 13px;
+    -fx-text-fill: #25396f;
+}
+.text-field:focused, .password-field:focused, .text-area:focused, .combo-box:focused {
+    -fx-border-color: #435ebe;
+    -fx-effect: dropshadow(three-pass-box, rgba(67, 94, 190, 0.1), 8, 0, 0, 2);
+}
+
+/* ---- Header and Titles ---- */
+.label-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #25396f;
+}
+.label-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #7c8db5;
+}
+
+/* ---- Cards (Mazer Flat Elevated Style) ---- */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: transparent;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(37, 57, 111, 0.03), 20, 0, 0, 8);
+}
+
+/* ---- TableView Styling (Mazer Gridless Style) ---- */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+}
+.table-view:focused {
+    -fx-background-color: transparent;
+}
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+}
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-text-fill: #7c8db5;
+    -fx-padding: 12 15 12 15;
+    -fx-border-color: transparent transparent #eef2f6 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+.table-view .column-header .label {
+    -fx-alignment: CENTER_LEFT;
+}
+.table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #eef2f6 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 2 0 2 0;
+}
+.table-row-cell:odd {
+    -fx-background-color: white;
+}
+.table-row-cell:hover {
+    -fx-background-color: #f2f7ff;
+}
+.table-row-cell:selected {
+    -fx-background-color: #ebf3ff;
+    -fx-text-fill: #435ebe;
+}
+.table-view .placeholder .label {
+    -fx-text-fill: #a0aec0;
+    -fx-font-style: italic;
+}
+
+/* ---- TabPane Styling (Mazer Pill Styles with zero lines/focus indicators) ---- */
+.tab-pane {
+    -fx-tab-max-height: 38px;
+    -fx-tab-min-height: 38px;
+}
+.tab-pane .tab-header-area {
+    -fx-padding: 0 0 10 0;
+}
+.tab-pane .tab-header-background {
+    -fx-background-color: transparent;
+}
+.tab {
+    -fx-background-color: #eef2f6;
+    -fx-background-radius: 8;
+    -fx-padding: 8 20 8 20;
+    -fx-cursor: hand;
+    -fx-margin: 0 8 0 0;
+    -fx-background-insets: 0;
+}
+.tab .tab-label {
+    -fx-text-fill: #7c8db5;
+    -fx-font-weight: bold;
+}
+.tab:hover {
+    -fx-background-color: #dfe5ef;
+}
+.tab:hover .tab-label {
+    -fx-text-fill: #25396f;
+}
+.tab:selected {
+    -fx-background-color: #435ebe;
+    -fx-background-insets: 0;
+}
+.tab:selected .tab-label {
+    -fx-text-fill: white;
+}
+
+/* Completely remove JavaFX default focus border outlines inside tabs */
+.tab:focused {
+    -fx-background-insets: 0;
+}
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:focused .tab-container {
+    -fx-border-color: transparent;
+    -fx-border-style: none;
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+}
+.tab-container {
+    -fx-border-color: transparent;
+    -fx-border-style: none;
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+}
+
+/* ---- Sidebar Navigation (Mazer Clean White Sidebar) ---- */
+.sidebar {
+    -fx-background-color: white;
+    -fx-min-width: 240px;
+    -fx-pref-width: 240px;
+    -fx-effect: dropshadow(three-pass-box, rgba(37, 57, 111, 0.02), 15, 0, 2, 0);
+    -fx-padding: 0 15 0 15;
+}
+.sidebar-title {
+    -fx-text-fill: #25396f;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 30 10 25 10;
+    -fx-alignment: center;
+}
+.user-profile-panel {
+    -fx-background-color: #f2f7ff;
+    -fx-padding: 12 15 12 15;
+    -fx-background-radius: 8;
+}
+.user-profile-name {
+    -fx-text-fill: #25396f;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+.user-profile-role {
+    -fx-text-fill: #7c8db5;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-transform: uppercase;
+}
+
+.sidebar-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #25396f;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 15 12 15;
+    -fx-cursor: hand;
+    -fx-pref-width: 210px;
+    -fx-background-radius: 8;
+    -fx-margin: 3 0 3 0;
+}
+.sidebar-item:hover {
+    -fx-background-color: #f2f7ff;
+    -fx-text-fill: #435ebe;
+}
+.sidebar-item-active {
+    -fx-background-color: #435ebe;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+}
+
+.sidebar-item-logout {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ff7976;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 15 12 15;
+    -fx-cursor: hand;
+    -fx-pref-width: 210px;
+    -fx-background-radius: 8;
+    -fx-margin: 3 0 3 0;
+}
+.sidebar-item-logout:hover {
+    -fx-background-color: #fff2f2;
+}
+
+/* ---- Dashboard Header ---- */
+.dashboard-header {
+    -fx-background-color: transparent;
+    -fx-padding: 15 25 15 25;
+}
+.dashboard-header-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #25396f;
+}
+.dashboard-header-date {
+    -fx-text-fill: #7c8db5;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}

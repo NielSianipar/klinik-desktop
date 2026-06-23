@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.klinik.controller.LaporanController">
+   <children>
+      <!-- Panel Kiri: Daftar Laporan Kunjungan Terdaftar -->
+      <VBox spacing="15.0" styleClass="card" HBox.hgrow="ALWAYS">
+         <children>
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: -fx-text-dark;" text="Riwayat Laporan Kunjungan" />
+            <TableView fx:id="laporanTableView" prefHeight="400.0" prefWidth="550.0" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="colDokter" prefWidth="180.0" text="Dokter Pemeriksa" />
+                  <TableColumn fx:id="colPeriode" prefWidth="170.0" style="-fx-alignment: CENTER;" text="Periode Laporan" />
+                  <TableColumn fx:id="colKunjungan" prefWidth="90.0" style="-fx-alignment: CENTER;" text="Kunjungan" />
+                  <TableColumn fx:id="colPasienBaru" prefWidth="90.0" style="-fx-alignment: CENTER;" text="Pasien Baru" />
+               </columns>
+            </TableView>
+         </children>
+      </VBox>
+      
+      <!-- Panel Kanan: Form Generate Laporan Baru -->
+      <VBox prefWidth="380.0" spacing="15.0" styleClass="card">
+         <children>
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: -fx-text-dark;" text="Generate Laporan Baru" />
+            
+            <GridPane hgap="10.0" vgap="12.0" VBox.vgrow="ALWAYS">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="250.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="80.0" valignment="TOP" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <!-- Dokter -->
+                  <Label text="Pilih Dokter *" GridPane.rowIndex="0" />
+                  <ComboBox fx:id="dokterComboBox" maxWidth="1.7976931348623157E308" promptText="Pilih dokter" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                  
+                  <!-- Periode Mulai -->
+                  <Label text="Dari Tanggal *" GridPane.rowIndex="1" />
+                  <DatePicker fx:id="mulaiDatePicker" maxWidth="1.7976931348623157E308" promptText="Pilih tgl mulai" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  
+                  <!-- Periode Selesai -->
+                  <Label text="Sampai Tgl *" GridPane.rowIndex="2" />
+                  <DatePicker fx:id="selesaiDatePicker" maxWidth="1.7976931348623157E308" promptText="Pilih tgl selesai" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  
+                  <!-- Total Kunjungan Selesai -->
+                  <Label text="Total Kunjungan" GridPane.rowIndex="3" />
+                  <TextField fx:id="totalKunjunganField" disable="true" editable="false" promptText="[ Hitung otomatis ]" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  
+                  <!-- Total Pasien Baru -->
+                  <Label text="Pasien Baru" GridPane.rowIndex="4" />
+                  <TextField fx:id="totalPasienBaruField" disable="true" editable="false" promptText="[ Hitung otomatis ]" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  
+                  <!-- Keterangan -->
+                  <Label text="Keterangan" GridPane.rowIndex="5">
+                     <GridPane.margin>
+                        <Insets top="5.0" />
+                     </GridPane.margin></Label>
+                  <TextArea fx:id="keteranganArea" prefHeight="70.0" promptText="Catatan tambahan laporan bulanan..." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+               </children>
+            </GridPane>
+            
+            <HBox spacing="10.0" alignment="CENTER_RIGHT">
+               <children>
+                  <Button onAction="#handleHitungStatistik" styleClass="btn-secondary" text="📊 Hitung Realtime" />
+                  <Button onAction="#handleDelete" styleClass="btn-danger" text="Hapus" />
+                  <Button onAction="#handleSave" styleClass="btn-primary" text="Simpan" />
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</HBox>
