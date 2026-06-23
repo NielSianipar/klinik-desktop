@@ -1,5 +1,6 @@
 com\klinik\controller\PasienController.class
 com\klinik\database\DatabaseConnection.class
+com\klinik\CheckAllPasien.class
 com\klinik\util\AlertHelper.class
 com\klinik\model\RiwayatPengobatan.class
 com\klinik\controller\OverviewController.class

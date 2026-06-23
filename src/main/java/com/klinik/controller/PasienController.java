@@ -102,7 +102,14 @@ public class PasienController {
         rmField.setText(p.getNomorRm());
         namaField.setText(p.getNamaLengkap());
         dobDatePicker.setValue(p.getTanggalLahir());
-        genderComboBox.setValue(p.getJenisKelamin());
+        String gk = p.getJenisKelamin();
+        if ("laki-laki".equalsIgnoreCase(gk)) {
+            genderComboBox.setValue("Laki-laki");
+        } else if ("perempuan".equalsIgnoreCase(gk)) {
+            genderComboBox.setValue("Perempuan");
+        } else {
+            genderComboBox.setValue(gk);
+        }
         teleponField.setText(p.getTelepon());
         emailField.setText(p.getEmail());
         bloodComboBox.setValue(p.getGolonganDarah());
@@ -179,12 +186,36 @@ public class PasienController {
 
         // Ambil nilai dari form
         LocalDate dob = dobDatePicker.getValue();
-        String gender = genderComboBox.getValue();
+        String genderRaw = genderComboBox.getValue();
         String telepon = teleponField.getText().trim();
         String email = emailField.getText().trim();
         String golDarah = bloodComboBox.getValue();
         String alergi = alergiArea.getText().trim();
         String alamat = alamatArea.getText().trim();
+
+        // Validasi Tanggal Lahir (Not Null dan tidak di masa depan)
+        if (dob == null) {
+            AlertHelper.showWarning("Validasi Gagal", "Tanggal Lahir Kosong", "Tanggal Lahir pasien harus diisi!");
+            return;
+        }
+        if (dob.isAfter(LocalDate.now())) {
+            AlertHelper.showWarning("Validasi Gagal", "Tanggal Lahir Tidak Valid", "Tanggal Lahir pasien tidak boleh di masa depan!");
+            return;
+        }
+
+        // Validasi Jenis Kelamin (Not Null)
+        if (genderRaw == null || genderRaw.trim().isEmpty()) {
+            AlertHelper.showWarning("Validasi Gagal", "Jenis Kelamin Kosong", "Jenis Kelamin pasien harus diisi!");
+            return;
+        }
+
+        // Normalisasi gender ke lowercase untuk database
+        String gender = null;
+        if ("Laki-laki".equalsIgnoreCase(genderRaw) || "laki-laki".equalsIgnoreCase(genderRaw)) {
+            gender = "laki-laki";
+        } else if ("Perempuan".equalsIgnoreCase(genderRaw) || "perempuan".equalsIgnoreCase(genderRaw)) {
+            gender = "perempuan";
+        }
 
         if (selectedPasien == null) {
             // Tambah Baru (INSERT)

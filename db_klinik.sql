@@ -172,3 +172,12 @@ INSERT INTO obat (kode_obat, nama_obat, kategori, satuan, stok, harga, keteranga
 ('OBT-001', 'Paracetamol Syrup 60ml', 'Obat Bebas', 'Botol', 50, 18500.00, 'Pereda demam anak rasa jeruk'),
 ('OBT-002', 'Amoxicillin 500mg', 'Obat Keras', 'Tablet', 8, 12000.00, 'Antibiotik infeksi bakteri pernafasan (Stok Menipis)'),
 ('OBT-003', 'Cetirizine 10mg', 'Obat Bebas Terbatas', 'Tablet', 120, 7500.00, 'Antihistamin pereda alergi');
+
+-- Seed Jadwal Dokter untuk dr. Budi Santoso, Sp.A (Dokter ID: 1)
+INSERT INTO jadwal_dokter (id_dokter, hari, jam_mulai, jam_selesai, kuota, tersedia) VALUES 
+(1, 'senin', '08:00:00', '12:00:00', 20, 1),
+(1, 'selasa', '08:00:00', '12:00:00', 20, 1),
+(1, 'rabu', '08:00:00', '12:00:00', 20, 1),
+(1, 'kamis', '13:00:00', '17:00:00', 15, 1),
+(1, 'jumat', '13:00:00', '17:00:00', 15, 1);
+

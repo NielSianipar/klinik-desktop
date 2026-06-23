@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.StringConverter;
+import javafx.scene.layout.VBox;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,6 +28,18 @@ import java.util.stream.Collectors;
 public class RekamMedisController {
 
     // PANEL KIRI: Antrian Pasien
+    @FXML
+    private VBox leftQueuePanel;
+
+    @FXML
+    private Tab tabPemeriksaan;
+
+    @FXML
+    private Tab tabRiwayat;
+
+    @FXML
+    private Label lblAntrianTitle;
+
     @FXML
     private TableView<Pendaftaran> antrianTableView;
 
@@ -122,6 +135,18 @@ public class RekamMedisController {
     @FXML
     private TableColumn<RekamMedis, String> colRiwayatCatatan;
 
+    @FXML
+    private Button btnTambahObat;
+
+    @FXML
+    private Button btnHapusObat;
+
+    @FXML
+    private Button btnResetForm;
+
+    @FXML
+    private Button btnSimpanPemeriksaan;
+
     // DAOs
     private final PendaftaranDAO pendaftaranDAO = new PendaftaranDAO();
     private final PasienDAO pasienDAO = new PasienDAO();
@@ -138,15 +163,87 @@ public class RekamMedisController {
 
     @FXML
     public void initialize() {
-        // 1. Dapatkan profil dokter aktif yang login
+        // 1. Dapatkan profil user login
+        boolean isPerawat = false;
+        boolean isPasien = false;
+        Pasien patientUser = null;
         if (SessionManager.isLoggedIn()) {
             Pengguna user = SessionManager.getCurrentUser();
-            currentDokter = dokterDAO.findByPenggunaId(user.getIdPengguna());
+            isPerawat = "perawat".equalsIgnoreCase(user.getPeran());
+            isPasien = "pasien".equalsIgnoreCase(user.getPeran());
+            if (isPasien) {
+                patientUser = pasienDAO.findByPenggunaId(user.getIdPengguna());
+                if (patientUser == null && user.getEmail() != null) {
+                    patientUser = pasienDAO.findByEmail(user.getEmail());
+                    if (patientUser != null) {
+                        patientUser.setIdPengguna(user.getIdPengguna());
+                        pasienDAO.update(patientUser);
+                    }
+                }
+            } else {
+                currentDokter = dokterDAO.findByPenggunaId(user.getIdPengguna());
+            }
+        }
+
+        if (isPerawat) {
+            lblAntrianTitle.setText("Semua Antrian Hari Ini");
+            btnTambahObat.setVisible(false);
+            btnTambahObat.setManaged(false);
+            btnHapusObat.setVisible(false);
+            btnHapusObat.setManaged(false);
+            btnResetForm.setVisible(false);
+            btnResetForm.setManaged(false);
+            btnSimpanPemeriksaan.setVisible(false);
+            btnSimpanPemeriksaan.setManaged(false);
+        } else if (isPasien) {
+            // Sembunyikan panel antrian kiri
+            leftQueuePanel.setVisible(false);
+            leftQueuePanel.setManaged(false);
+            
+            // Sembunyikan tombol manipulasi
+            btnTambahObat.setVisible(false);
+            btnTambahObat.setManaged(false);
+            btnHapusObat.setVisible(false);
+            btnHapusObat.setManaged(false);
+            btnResetForm.setVisible(false);
+            btnResetForm.setManaged(false);
+            btnSimpanPemeriksaan.setVisible(false);
+            btnSimpanPemeriksaan.setManaged(false);
+            
+            // Ubah nama tab
+            tabPemeriksaan.setText("📋 Detail Rincian Berobat");
+            
+            // Set form read-only
+            setFormEditable(false);
+            
+            // Load detail pasien terpilih & riwayatnya
+            if (patientUser != null) {
+                selectedPasien = patientUser;
+                lblNamaPasien.setText("Nama Pasien: " + selectedPasien.getNamaLengkap());
+                lblRmPasien.setText("No. RM: " + selectedPasien.getNomorRm());
+                String alergi = selectedPasien.getRiwayatAlergi();
+                lblAlergiPasien.setText("Alergi: " + (alergi == null || alergi.isEmpty() ? "Tidak Ada" : alergi));
+                lblUsiaGolDarah.setText("Usia: " + selectedPasien.getUsia() + " Th  |  Gol Darah: " + selectedPasien.getGolonganDarah());
+                
+                loadPatientHistory(selectedPasien.getIdPasien());
+            }
         }
 
         // 2. Setup tabel antrian
         colNoAntrian.setCellValueFactory(new PropertyValueFactory<>("nomorAntrian"));
-        colNamaPasien.setCellValueFactory(new PropertyValueFactory<>("namaPasien"));
+        colNamaPasien.setCellValueFactory(cellData -> {
+            Pendaftaran p = cellData.getValue();
+            if (p != null) {
+                String name = p.getNamaPasien();
+                if ("selesai".equalsIgnoreCase(p.getStatus())) {
+                    name += " (Selesai)";
+                } else if ("dipanggil".equalsIgnoreCase(p.getStatus())) {
+                    name += " (Dipanggil)";
+                }
+                return new SimpleStringProperty(name);
+            }
+            return new SimpleStringProperty("");
+        });
 
         // Listener klik antrian
         antrianTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
@@ -166,13 +263,30 @@ public class RekamMedisController {
         setupObatComboBox();
 
         // 4. Setup tabel riwayat
-        colRiwayatTanggal.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTanggalPeriksa().toString()));
+        colRiwayatTanggal.setCellValueFactory(cellData -> {
+            if (cellData.getValue() != null && cellData.getValue().getTanggalPeriksa() != null) {
+                return new SimpleStringProperty(cellData.getValue().getTanggalPeriksa().toString());
+            }
+            return new SimpleStringProperty("-");
+        });
         colRiwayatDokter.setCellValueFactory(new PropertyValueFactory<>("namaDokter"));
         colRiwayatDiagnosis.setCellValueFactory(new PropertyValueFactory<>("diagnosis"));
         colRiwayatCatatan.setCellValueFactory(new PropertyValueFactory<>("catatan"));
 
+        // Listener klik riwayat untuk memuat detail rincian ke Tab 1 secara otomatis
+        riwayatTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                displayRekamMedisDetails(newVal);
+            }
+        });
+
         // 5. Load antrian dokter hari ini
-        loadDoctorQueue();
+        if (!isPasien) {
+            loadDoctorQueue();
+        } else {
+            // Pindahkan tab aktif secara default ke Tab Riwayat Rekam Medis
+            rekamMedisTabPane.getSelectionModel().select(tabRiwayat);
+        }
     }
 
     private void setupObatComboBox() {
@@ -187,21 +301,33 @@ public class RekamMedisController {
     }
 
     private void loadDoctorQueue() {
-        if (currentDokter == null) {
+        boolean isPerawat = SessionManager.isLoggedIn() && "perawat".equalsIgnoreCase(SessionManager.getCurrentUser().getPeran());
+        
+        if (currentDokter == null && !isPerawat) {
             antrianTableView.getItems().clear();
             return;
         }
 
-        // Load antrian hari ini untuk dokter aktif yang statusnya 'menunggu' atau 'dipanggil'
-        List<Pendaftaran> list = pendaftaranDAO.findByDokterAndDate(currentDokter.getIdDokter(), LocalDate.now())
-                .stream()
-                .filter(p -> "menunggu".equalsIgnoreCase(p.getStatus()) || "dipanggil".equalsIgnoreCase(p.getStatus()))
-                .collect(Collectors.toList());
+        List<Pendaftaran> list;
+        if (isPerawat) {
+            // Perawat dapat melihat semua antrian hari ini dari semua dokter
+            list = pendaftaranDAO.findByDate(LocalDate.now())
+                    .stream()
+                    .filter(p -> "menunggu".equalsIgnoreCase(p.getStatus()) || "dipanggil".equalsIgnoreCase(p.getStatus()) || "selesai".equalsIgnoreCase(p.getStatus()))
+                    .collect(Collectors.toList());
+        } else {
+            // Dokter hanya melihat antrian miliknya sendiri
+            list = pendaftaranDAO.findByDokterAndDate(currentDokter.getIdDokter(), LocalDate.now())
+                    .stream()
+                    .filter(p -> "menunggu".equalsIgnoreCase(p.getStatus()) || "dipanggil".equalsIgnoreCase(p.getStatus()) || "selesai".equalsIgnoreCase(p.getStatus()))
+                    .collect(Collectors.toList());
+        }
         
         antrianTableView.setItems(FXCollections.observableArrayList(list));
     }
 
     private void loadPatientInfo(int idPasien) {
+        boolean isPerawat = SessionManager.isLoggedIn() && "perawat".equalsIgnoreCase(SessionManager.getCurrentUser().getPeran());
         selectedPasien = pasienDAO.findById(idPasien);
         if (selectedPasien != null) {
             lblNamaPasien.setText("Nama Pasien: " + selectedPasien.getNamaLengkap());
@@ -214,15 +340,74 @@ public class RekamMedisController {
 
             // Load riwayat rekam medis pasien di Tab 2
             loadPatientHistory(idPasien);
+
+            if (selectedPendaftaran != null && "selesai".equalsIgnoreCase(selectedPendaftaran.getStatus())) {
+                loadSavedPemeriksaan(selectedPendaftaran.getIdPendaftaran());
+            } else {
+                handleClearForm(null);
+                setFormEditable(!isPerawat);
+            }
+        } else {
+            handleClearForm(null);
+            setFormEditable(!isPerawat);
         }
-        
-        // Reset form input rekam medis baru
-        handleClearForm(null);
     }
 
     private void loadPatientHistory(int idPasien) {
         List<RekamMedis> riwayat = rekamMedisDAO.findByPasienId(idPasien);
         riwayatTableView.setItems(FXCollections.observableArrayList(riwayat));
+    }
+
+    private void loadSavedPemeriksaan(int idPendaftaran) {
+        RekamMedis rm = rekamMedisDAO.findByPendaftaranId(idPendaftaran);
+        if (rm != null) {
+            displayRekamMedisDetails(rm);
+        } else {
+            handleClearForm(null);
+            setFormEditable(true);
+        }
+    }
+
+    private void displayRekamMedisDetails(RekamMedis rm) {
+        if (rm != null) {
+            tdField.setText(rm.getTekananDarah() != null ? rm.getTekananDarah() : "");
+            suhuField.setText(rm.getSuhuTubuh() != null ? rm.getSuhuTubuh().toString() : "");
+            bbField.setText(rm.getBeratBadan() != null ? rm.getBeratBadan().toString() : "");
+            tbField.setText(rm.getTinggiBadan() != null ? rm.getTinggiBadan().toString() : "");
+            anamnesisArea.setText(rm.getAnamnesis() != null ? rm.getAnamnesis() : "");
+            fisikArea.setText(rm.getPemeriksaanFisik() != null ? rm.getPemeriksaanFisik() : "");
+            diagnosisField.setText(rm.getDiagnosis() != null ? rm.getDiagnosis() : "");
+            icdField.setText(rm.getKodeIcd() != null ? rm.getKodeIcd() : "");
+            tindakanField.setText(rm.getTindakan() != null ? rm.getTindakan() : "");
+            catatanField.setText(rm.getCatatan() != null ? rm.getCatatan() : "");
+            
+            // Load prescribed drugs for this rekam medis
+            resepList.clear();
+            List<RiwayatPengobatan> reseps = riwayatPengobatanDAO.findByRekamMedisId(rm.getIdRekamMedis());
+            resepList.addAll(reseps);
+            
+            // Set form to read-only
+            setFormEditable(false);
+            
+            // Auto switch tab to the Pemeriksaan/Rincian tab so the user sees the details immediately
+            rekamMedisTabPane.getSelectionModel().select(tabPemeriksaan);
+        }
+    }
+
+    private void setFormEditable(boolean editable) {
+        tdField.setEditable(editable);
+        suhuField.setEditable(editable);
+        bbField.setEditable(editable);
+        tbField.setEditable(editable);
+        anamnesisArea.setEditable(editable);
+        fisikArea.setEditable(editable);
+        diagnosisField.setEditable(editable);
+        icdField.setEditable(editable);
+        tindakanField.setEditable(editable);
+        catatanField.setEditable(editable);
+        obatComboBox.setDisable(!editable);
+        obatJumlahField.setEditable(editable);
+        obatAturanField.setEditable(editable);
     }
 
     @FXML
@@ -232,6 +417,19 @@ public class RekamMedisController {
 
     @FXML
     void handleAddObat(ActionEvent event) {
+        boolean isRestricted = SessionManager.isLoggedIn() && 
+            ("perawat".equalsIgnoreCase(SessionManager.getCurrentUser().getPeran()) || 
+             "pasien".equalsIgnoreCase(SessionManager.getCurrentUser().getPeran()));
+        if (isRestricted) {
+            AlertHelper.showWarning("Akses Ditolak", "Peran Tidak Diizinkan", "Peran Anda tidak diizinkan untuk menambah resep obat.");
+            return;
+        }
+
+        if (selectedPendaftaran != null && "selesai".equalsIgnoreCase(selectedPendaftaran.getStatus())) {
+            AlertHelper.showWarning("Peringatan", "Pemeriksaan Selesai", "Pasien ini sudah selesai diperiksa hari ini.");
+            return;
+        }
+
         Obat o = obatComboBox.getValue();
         String qtyStr = obatJumlahField.getText().trim();
         String aturan = obatAturanField.getText().trim();
@@ -277,6 +475,19 @@ public class RekamMedisController {
 
     @FXML
     void handleRemoveObat(ActionEvent event) {
+        boolean isRestricted = SessionManager.isLoggedIn() && 
+            ("perawat".equalsIgnoreCase(SessionManager.getCurrentUser().getPeran()) || 
+             "pasien".equalsIgnoreCase(SessionManager.getCurrentUser().getPeran()));
+        if (isRestricted) {
+            AlertHelper.showWarning("Akses Ditolak", "Peran Tidak Diizinkan", "Peran Anda tidak diizinkan untuk menghapus resep obat.");
+            return;
+        }
+
+        if (selectedPendaftaran != null && "selesai".equalsIgnoreCase(selectedPendaftaran.getStatus())) {
+            AlertHelper.showWarning("Peringatan", "Pemeriksaan Selesai", "Pasien ini sudah selesai diperiksa hari ini.");
+            return;
+        }
+
         RiwayatPengobatan selectedRp = resepTableView.getSelectionModel().getSelectedItem();
         if (selectedRp != null) {
             resepList.remove(selectedRp);
@@ -305,8 +516,21 @@ public class RekamMedisController {
 
     @FXML
     void handleSavePemeriksaan(ActionEvent event) {
-        if (selectedPendaftaran == null || selectedPasien == null || currentDokter == null) {
+        boolean isRestricted = SessionManager.isLoggedIn() && 
+            ("perawat".equalsIgnoreCase(SessionManager.getCurrentUser().getPeran()) || 
+             "pasien".equalsIgnoreCase(SessionManager.getCurrentUser().getPeran()));
+        if (isRestricted) {
+            AlertHelper.showWarning("Akses Ditolak", "Peran Tidak Diizinkan", "Peran Anda tidak diizinkan untuk mengubah atau menyimpan rekam medis.");
+            return;
+        }
+
+        if (selectedPendaftaran == null || selectedPasien == null) {
             AlertHelper.showWarning("Peringatan", "Pilih Antrian", "Silakan pilih pasien dari tabel antrian terlebih dahulu!");
+            return;
+        }
+
+        if ("selesai".equalsIgnoreCase(selectedPendaftaran.getStatus())) {
+            AlertHelper.showWarning("Peringatan", "Pemeriksaan Selesai", "Pasien ini sudah selesai diperiksa hari ini.");
             return;
         }
 
@@ -371,15 +595,23 @@ public class RekamMedisController {
             loadDoctorQueue();
             setupObatComboBox(); // segarkan list obat agar stok terupdate
             
-            // Reset state
-            selectedPendaftaran = null;
-            selectedPasien = null;
-            lblNamaPasien.setText("Nama Pasien: -");
-            lblRmPasien.setText("No. RM: -");
-            lblAlergiPasien.setText("Alergi: -");
-            lblUsiaGolDarah.setText("Usia: -  |  Gol Darah: -");
-            handleClearForm(null);
-            riwayatTableView.getItems().clear();
+            // Keep the same patient selected, but reload details (which are now 'selesai')
+            if (selectedPasien != null) {
+                Pendaftaran updatedPendaftaran = null;
+                for (Pendaftaran p : antrianTableView.getItems()) {
+                    if (p.getIdPendaftaran() == rm.getIdPendaftaran()) {
+                        updatedPendaftaran = p;
+                        break;
+                    }
+                }
+                
+                if (updatedPendaftaran != null) {
+                    antrianTableView.getSelectionModel().select(updatedPendaftaran);
+                } else {
+                    // Fallback: reload patient info directly (including history & read-only saved exam)
+                    loadPatientInfo(selectedPasien.getIdPasien());
+                }
+            }
         } else {
             AlertHelper.showError("Error", "Gagal Menyimpan", "Terjadi kesalahan saat menyimpan rekam medis pemeriksaan.");
         }

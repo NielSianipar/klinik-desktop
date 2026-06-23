@@ -12,7 +12,7 @@
     -fx-warning:        #eaca4a; /* Mazer Warning */
     -fx-text-dark:      #25396f; /* Mazer Dark Blue-Gray */
     -fx-text-muted:     #7c8db5; /* Mazer Muted Text */
-    -fx-border-color:   #eef2f6;
+    -fx-border-color:   transparent;
     -fx-bg-light:       #f2f7ff; /* Mazer Light BG */
 }
 
@@ -219,12 +219,15 @@
     -fx-effect: dropshadow(three-pass-box, rgba(37, 57, 111, 0.02), 15, 0, 2, 0);
     -fx-padding: 0 15 0 15;
 }
+.sidebar-brand-container {
+    -fx-alignment: center-left;
+    -fx-padding: 25 10 20 10;
+}
 .sidebar-title {
     -fx-text-fill: #25396f;
-    -fx-font-size: 16px;
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-padding: 30 10 25 10;
-    -fx-alignment: center;
+    -fx-alignment: center-left;
 }
 .user-profile-panel {
     -fx-background-color: #f2f7ff;

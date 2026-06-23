@@ -22,9 +22,9 @@
 <HBox spacing="15.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.klinik.controller.RekamMedisController">
    <children>
       <!-- Panel Kiri: Antrian Pemeriksaan Dokter (Today) -->
-      <VBox prefWidth="300.0" spacing="12.0" styleClass="card">
+      <VBox fx:id="leftQueuePanel" prefWidth="300.0" spacing="12.0" styleClass="card">
          <children>
-            <Label style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: -fx-text-dark;" text="Antrian Pasien Anda" />
+            <Label fx:id="lblAntrianTitle" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: -fx-text-dark;" text="Antrian Pasien Anda" />
             <TableView fx:id="antrianTableView" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn fx:id="colNoAntrian" prefWidth="75.0" style="-fx-alignment: CENTER;" text="No. Antri" />
@@ -63,7 +63,7 @@
             <TabPane fx:id="rekamMedisTabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
               <tabs>
                 <!-- Tab 1: Pemeriksaan Baru -->
-                <Tab text="🩺   Pemeriksaan Hari Ini">
+                <Tab fx:id="tabPemeriksaan" text="🩺   Pemeriksaan Hari Ini">
                   <content>
                      <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 10;">
                         <content>
@@ -160,7 +160,7 @@
                                                    <TextField fx:id="obatAturanField" promptText="Contoh: 3 x 1 sehari setelah makan" />
                                                 </children>
                                              </VBox>
-                                             <Button mnemonicParsing="false" onAction="#handleAddObat" styleClass="btn-secondary" text="➕ Tambah" />
+                                             <Button fx:id="btnTambahObat" mnemonicParsing="false" onAction="#handleAddObat" styleClass="btn-secondary" text="➕ Tambah" />
                                           </children>
                                        </HBox>
                                        
@@ -173,7 +173,7 @@
                                        </TableView>
                                        <HBox alignment="CENTER_RIGHT">
                                           <children>
-                                             <Button mnemonicParsing="false" onAction="#handleRemoveObat" styleClass="btn-danger" text="Hapus Obat Terpilih" />
+                                             <Button fx:id="btnHapusObat" mnemonicParsing="false" onAction="#handleRemoveObat" styleClass="btn-danger" text="Hapus Obat Terpilih" />
                                           </children>
                                        </HBox>
                                     </children>
@@ -182,8 +182,8 @@
                                  <!-- Tombol Simpan Akhir -->
                                  <HBox alignment="CENTER_RIGHT" spacing="10.0">
                                     <children>
-                                       <Button mnemonicParsing="false" onAction="#handleClearForm" styleClass="btn-secondary" text="Reset Form" />
-                                       <Button mnemonicParsing="false" onAction="#handleSavePemeriksaan" styleClass="btn-primary" text="💾 Simpan Pemeriksaan &amp; Selesaikan" />
+                                       <Button fx:id="btnResetForm" mnemonicParsing="false" onAction="#handleClearForm" styleClass="btn-secondary" text="Reset Form" />
+                                       <Button fx:id="btnSimpanPemeriksaan" mnemonicParsing="false" onAction="#handleSavePemeriksaan" styleClass="btn-primary" text="💾 Simpan Pemeriksaan &amp; Selesaikan" />
                                     </children>
                                  </HBox>
                               </children>
@@ -194,7 +194,7 @@
                 </Tab>
                 
                 <!-- Tab 2: Riwayat Rekam Medis -->
-                <Tab text="📚   Riwayat Rekam Medis">
+                <Tab fx:id="tabRiwayat" text="📚   Riwayat Rekam Medis">
                   <content>
                      <VBox spacing="10.0" style="-fx-padding: 10;">
                         <children>

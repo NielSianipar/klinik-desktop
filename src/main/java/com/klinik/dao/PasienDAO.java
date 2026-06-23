@@ -36,6 +36,44 @@ public class PasienDAO {
     }
 
     /**
+     * Mencari pasien berdasarkan ID Pengguna.
+     */
+    public Pasien findByPenggunaId(int idPengguna) {
+        String sql = "SELECT * FROM pasien WHERE id_pengguna = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idPengguna);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRowToPasien(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Mencari pasien berdasarkan email.
+     */
+    public Pasien findByEmail(String email) {
+        String sql = "SELECT * FROM pasien WHERE email = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRowToPasien(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * Mencari pasien berdasarkan nomor rekam medis (RM).
      */
     public Pasien findByNomorRm(String nomorRm) {

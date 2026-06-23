@@ -86,8 +86,10 @@ public class OverviewController {
         int totalPasien = pasienDAO.findAll().size();
         totalPasienLabel.setText(String.valueOf(totalPasien));
 
-        // Hitung antrian hari ini
-        int totalAntrian = pendaftaranDAO.findByDate(LocalDate.now()).size();
+        // Hitung antrian aktif hari ini (menunggu / dipanggil)
+        long totalAntrian = pendaftaranDAO.findByDate(LocalDate.now()).stream()
+                .filter(p -> "menunggu".equalsIgnoreCase(p.getStatus()) || "dipanggil".equalsIgnoreCase(p.getStatus()))
+                .count();
         totalAntrianLabel.setText(String.valueOf(totalAntrian));
 
         // Hitung obat yang stoknya menipis (< 10)

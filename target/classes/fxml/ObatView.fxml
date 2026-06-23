@@ -99,7 +99,7 @@
             
             <HBox alignment="CENTER_RIGHT" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#handleNew" styleClass="btn-secondary" text="Tambah Baru" />
+                  <Button mnemonicParsing="false" onAction="#handleNew" styleClass="btn-secondary" text="Bersihkan Form" />
                   <Button mnemonicParsing="false" onAction="#handleDelete" styleClass="btn-danger" text="Hapus" />
                   <Button mnemonicParsing="false" onAction="#handleSave" styleClass="btn-primary" text="Simpan" />
                </children>

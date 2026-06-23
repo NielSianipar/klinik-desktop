@@ -85,8 +85,12 @@ public class MainDashboardController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
         dateLabel.setText(today.format(formatter));
 
-        // 3. Muat halaman Overview sebagai halaman default
-        loadView("/fxml/Overview.fxml", "Ringkasan", btnOverview);
+        // 3. Muat halaman default berdasarkan role
+        if (user != null && "pasien".equalsIgnoreCase(user.getPeran())) {
+            loadView("/fxml/RekamMedisView.fxml", "Riwayat Medis Saya", btnRekamMedis);
+        } else {
+            loadView("/fxml/Overview.fxml", "Ringkasan", btnOverview);
+        }
     }
 
     /**
@@ -107,15 +111,27 @@ public class MainDashboardController {
                 break;
                 
             case "perawat":
-                // Perawat tidak mengisi rekam medis detail (dokter) dan laporan manager
-                btnRekamMedis.setVisible(false);
-                btnRekamMedis.setManaged(false);
+                // Perawat hanya melihat ringkasan jadwal kunjungan pasien hari ini, riwayat data pasien, dan rekam medis
+                btnPasien.setVisible(true);
+                btnPasien.setManaged(true);
+                btnDokter.setVisible(false);
+                btnDokter.setManaged(false);
+                btnPendaftaran.setVisible(false);
+                btnPendaftaran.setManaged(false);
+                btnRekamMedis.setVisible(true);
+                btnRekamMedis.setManaged(true);
+                btnObat.setVisible(false);
+                btnObat.setManaged(false);
                 btnLaporan.setVisible(false);
                 btnLaporan.setManaged(false);
                 break;
                 
             case "pasien":
-                // Pasien hanya bisa melihat ringkasan (jadwal/antrian milik mereka)
+                // Pasien hanya bisa melihat riwayat rekam medis mereka sendiri
+                btnOverview.setVisible(false);
+                btnOverview.setManaged(false);
+                btnPasien.setVisible(false);
+                btnPasien.setManaged(false);
                 btnDokter.setVisible(false);
                 btnDokter.setManaged(false);
                 btnPendaftaran.setVisible(false);
@@ -124,6 +140,9 @@ public class MainDashboardController {
                 btnObat.setManaged(false);
                 btnLaporan.setVisible(false);
                 btnLaporan.setManaged(false);
+                btnRekamMedis.setVisible(true);
+                btnRekamMedis.setManaged(true);
+                btnRekamMedis.setText("📋 Riwayat Medis Saya");
                 break;
                 
             case "admin":
